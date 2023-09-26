@@ -5,7 +5,7 @@ const getSections = async (req, res) => {
 
   try {
     const sections = await Section.find({ userId })
-    console.log('Sections:', sections)
+
     res.status(200).json({ sections })
   } catch (error) {
     console.error(error)

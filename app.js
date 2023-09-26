@@ -36,7 +36,7 @@ const store = new MongoDBStore({
 
 app.use(
   session({
-    secret: 'moykluch',
+    secret: process.env.SECRET,
     resave: false,
     saveUninitialized: false,
     store: store,
