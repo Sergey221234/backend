@@ -52,16 +52,26 @@ const updateSection = async (req, res) => {
     const telegramId = updatedSection.telegramId
     const formattedStartDate = updatedSection.startDate
     const formattedEndDate = updatedSection.endDate
-    const groupByArray = updatedSection.groupBy
+    const groupByOptions = updatedSection.groupByOptions
     const sortBy = updatedSection.sortBy
+    const arrMetricsFilters = updatedSection.metricsFilters
+    console.log('arrMetricsFilters UPD!!!!', arrMetricsFilters)
+
+    const metricsFiltersArray = arrMetricsFilters.map((filter) => {
+      const { filterName, filterOperator, filterValue } = filter
+      return { name: filterName, operator: filterOperator, value: filterValue }
+    })
+
+    console.log('metricsFiltersArray UPD', metricsFiltersArray)
 
     await dataCf(
       metrics,
       telegramId,
       formattedStartDate,
       formattedEndDate,
-      groupByArray,
-      sortBy
+      groupByOptions,
+      sortBy,
+      metricsFiltersArray
     )
 
     res.status(200).json({ section: updatedSection })

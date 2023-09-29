@@ -8,10 +8,11 @@ const dataCf = async (
   telegramId,
   formattedStartDate,
   formattedEndDate,
-  groupByArray,
-  sortBy
+  groupByOptions,
+  sortBy,
+  metricsFiltersArray
 ) => {
-  console.log('formattedStartDate', formattedStartDate)
+  console.log('metricsFiltersArray + DATACF', metricsFiltersArray)
   try {
     // const filtersForRequest = metricsFiltersArray.map((filter) => ({
     //   name: filter.name,
@@ -30,7 +31,7 @@ const dataCf = async (
       data: {
         startDate: formattedStartDate,
         endDate: formattedEndDate,
-        groupBy: groupByArray,
+        groupBy: groupByOptions,
         metrics: metrics,
         timezone: 'CET',
         orderType: 'asc',
@@ -39,13 +40,7 @@ const dataCf = async (
         page: 1,
         pageSize: 1,
         includeAll: true,
-        metricsFilters: [
-          {
-            name: 'trackingField4',
-            operator: '=',
-            value: '1774514406244401',
-          },
-        ],
+        metricsFilters: metricsFiltersArray,
         conversionTimestamp: 'visit',
       },
     }

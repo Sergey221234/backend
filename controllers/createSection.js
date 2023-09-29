@@ -15,15 +15,6 @@ const createSection = async (req, res) => {
       metricsFilters,
     } = req.body
 
-    console.log('req.body ', req.body)
-
-    // const metricsFiltersArray = metricsFilters.map((filter) => {
-    //   const { name, operator, value } = filter
-    //   return { name, operator, value }
-    // })
-
-    // console.log('metricsFiltersArray ', metricsFiltersArray)
-
     const userId = req.session.userId
 
     const fromDate = new Date(startDate)
@@ -43,10 +34,7 @@ const createSection = async (req, res) => {
     const formattedStartDate = formatDate(fromDate)
     const formattedEndDate = formatDate(toDate)
 
-    // const groupByArray = groupByOptions.split(',')
-
-    // const metricsArray = metrics.split(',')
-
+    console.log('metricsFilters create', metricsFilters)
     const newSection = new Section({
       title,
       metrics,
@@ -56,18 +44,30 @@ const createSection = async (req, res) => {
       endDate: formattedEndDate,
       sortBy,
       groupByOptions,
-      // metricsFilters: metricsFiltersArray,
+      metricsFilters,
     })
 
     await newSection.save()
+
+    const metricFilter = newSection.metricsFilters
+
+    console.log('metricFilter!!!! create', metricFilter)
+
+    const metricsFiltersArray = arrMetricsFilters.map((filter) => {
+      const { filterName, filterOperator, filterValue } = filter
+      return { name: filterName, operator: filterOperator, value: filterValue }
+    })
+
+    console.log('metricsFiltersArray create', metricsFiltersArray)
 
     await dataCf(
       metrics,
       telegramId,
       formattedStartDate,
       formattedEndDate,
-      // groupByArray,
-      sortBy
+      groupByOptions,
+      sortBy,
+      metricsFiltersArray
     )
 
     res.status(201).json({ section: newSection })
