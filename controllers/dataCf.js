@@ -4,13 +4,21 @@ const { Telegraf } = require('telegraf')
 const bot = new Telegraf('6415825467:AAH0zQVL2qkukflpysYTHgq4ixW8IUv2k68') // Замените YOUR_BOT_TOKEN на свой токен бота
 
 const dataCf = async (
-  campaignId,
+  metrics,
   telegramId,
   formattedStartDate,
   formattedEndDate,
-  groupByArray
+  groupByArray,
+  sortBy
 ) => {
+  console.log('formattedStartDate', formattedStartDate)
   try {
+    // const filtersForRequest = metricsFiltersArray.map((filter) => ({
+    //   name: filter.name,
+    //   operator: filter.operator,
+    //   value: filter.value,
+    // }))
+    // console.log('filtersForRequest', filtersForRequest)
     const options = {
       method: 'POST',
       url: 'https://public-api.clickflare.io/api/report',
@@ -23,16 +31,20 @@ const dataCf = async (
         startDate: formattedStartDate,
         endDate: formattedEndDate,
         groupBy: groupByArray,
-        metrics: ['trackingField4', 'visits', 'clickID'],
+        metrics: metrics,
         timezone: 'CET',
         orderType: 'asc',
         currency: 'USD',
-        sortBy: 'trackingField4',
+        sortBy: sortBy,
         page: 1,
-        pageSize: 3,
+        pageSize: 1,
         includeAll: true,
         metricsFilters: [
-          { name: 'trackingField4', operator: '=', value: campaignId },
+          {
+            name: 'trackingField4',
+            operator: '=',
+            value: '1774514406244401',
+          },
         ],
         conversionTimestamp: 'visit',
       },

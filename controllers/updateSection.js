@@ -1,4 +1,5 @@
 const Section = require('../models/section')
+const dataCf = require('./dataCf')
 
 const updateSection = async (req, res) => {
   const sectionId = req.params.sectionId
@@ -19,19 +20,23 @@ const updateSection = async (req, res) => {
       return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
     }
 
-    const formattedStartDate = formatDate(fromDate)
-    const formattedEndDate = formatDate(toDate)
+    const formattedStartDate1 = formatDate(fromDate)
+    const formattedEndDate2 = formatDate(toDate)
 
-    updatedSectionData.startDate = formattedStartDate
-    updatedSectionData.endDate = formattedEndDate
+    updatedSectionData.startDate = formattedStartDate1
+    updatedSectionData.endDate = formattedEndDate2
 
-    const groupByArr = updatedSectionData.groupBy.split(',')
-
-    if (Array.isArray(groupByArr) && groupByArr.length > 2) {
-      updatedSectionData.groupBy = groupByArr
-    } else {
-      updatedSectionData.groupBy = [updatedSectionData.groupBy]
+    let groupByArr = updatedSectionData.groupBy
+    if (typeof groupByArr === 'string') {
+      groupByArr = groupByArr.split(',')
     }
+    updatedSectionData.groupBy = groupByArr
+
+    let metricsArr = updatedSectionData.metrics
+    if (typeof metricsArr === 'string') {
+      metricsArr = metricsArr.split(',')
+    }
+    updatedSectionData.metrics = metricsArr
 
     const updatedSection = await Section.findByIdAndUpdate(
       sectionId,
@@ -42,6 +47,22 @@ const updateSection = async (req, res) => {
     if (!updatedSection) {
       return res.status(404).json({ message: 'Секция не найдена' })
     }
+
+    const metrics = updatedSection.metrics
+    const telegramId = updatedSection.telegramId
+    const formattedStartDate = updatedSection.startDate
+    const formattedEndDate = updatedSection.endDate
+    const groupByArray = updatedSection.groupBy
+    const sortBy = updatedSection.sortBy
+
+    await dataCf(
+      metrics,
+      telegramId,
+      formattedStartDate,
+      formattedEndDate,
+      groupByArray,
+      sortBy
+    )
 
     res.status(200).json({ section: updatedSection })
   } catch (error) {

@@ -4,8 +4,25 @@ const dataCf = require('./dataCf')
 // Создать новый раздел
 const createSection = async (req, res) => {
   try {
-    const { title, startDate, endDate, campaignId, telegramId, groupBy } =
-      req.body
+    const {
+      title,
+      startDate,
+      endDate,
+      metrics,
+      telegramId,
+      groupByOptions,
+      sortBy,
+      metricsFilters,
+    } = req.body
+
+    console.log('req.body ', req.body)
+
+    // const metricsFiltersArray = metricsFilters.map((filter) => {
+    //   const { name, operator, value } = filter
+    //   return { name, operator, value }
+    // })
+
+    // console.log('metricsFiltersArray ', metricsFiltersArray)
 
     const userId = req.session.userId
 
@@ -26,26 +43,31 @@ const createSection = async (req, res) => {
     const formattedStartDate = formatDate(fromDate)
     const formattedEndDate = formatDate(toDate)
 
-    const groupByArray = groupBy.split(',')
+    // const groupByArray = groupByOptions.split(',')
+
+    // const metricsArray = metrics.split(',')
 
     const newSection = new Section({
       title,
-      campaignId,
+      metrics,
       telegramId,
       userId,
       startDate: formattedStartDate,
       endDate: formattedEndDate,
-      groupBy: groupByArray,
+      sortBy,
+      groupByOptions,
+      // metricsFilters: metricsFiltersArray,
     })
 
     await newSection.save()
 
     await dataCf(
-      campaignId,
+      metrics,
       telegramId,
       formattedStartDate,
       formattedEndDate,
-      groupByArray
+      // groupByArray,
+      sortBy
     )
 
     res.status(201).json({ section: newSection })
