@@ -75,6 +75,7 @@ const dataCf = (
         const convertMetricsFilters = formatObjectToString(metricsFiltersArray)
         const metricsDataFilters = `Правило сработало по следующим условиям: \n${convertMetricsFilters}`
         await sendTelegramMessage(telegramId, metricsDataFilters)
+        stopInterval()
       }
     } catch (error) {
       console.error(
@@ -86,6 +87,7 @@ const dataCf = (
 
   if (notificationInterval !== 9999) {
     intervalId = setInterval(intervalCallback, notificationInterval * 60 * 1000)
+    console.log(intervalId)
   }
 }
 
