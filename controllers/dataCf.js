@@ -55,9 +55,25 @@ const dataCf = (
       const { data } = await axios.request(options)
       console.log(data)
 
+      function formatObjectToString(metricsFiltersArray) {
+        let result = ''
+        metricsFiltersArray.forEach((obj, index) => {
+          const keys = Object.keys(obj)
+          console.log('keys', keys)
+          const values = Object.values(obj)
+          console.log('values', values)
+          const conditionString = `${values[0]} ${values[1]} ${values[2]}`
+          console.log('conditionString', conditionString)
+          console.log('index', `${index}`)
+          result += `${index + 1}. ${conditionString}\n`
+          console.log('result', result)
+        })
+        return result
+      }
+
       if (data.items.length !== 0 && Object.keys(data.totals).length !== 0) {
-        const convertMetricsFilters = JSON.stringify(metricsFiltersArray)
-        const metricsDataFilters = `Метрики по фильтру ${convertMetricsFilters}`
+        const convertMetricsFilters = formatObjectToString(metricsFiltersArray)
+        const metricsDataFilters = `Правило сработало по следующим условиям: \n${convertMetricsFilters}`
         await sendTelegramMessage(telegramId, metricsDataFilters)
       }
     } catch (error) {
