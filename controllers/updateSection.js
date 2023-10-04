@@ -1,5 +1,5 @@
 const Section = require('../models/section')
-const dataCf = require('./dataCf')
+const { dataCf, stopInterval } = require('./dataCf')
 
 const updateSection = async (req, res) => {
   const sectionId = req.params.sectionId
@@ -38,6 +38,8 @@ const updateSection = async (req, res) => {
     }
     updatedSectionData.metrics = metricsArr
 
+    stopInterval()
+
     const updatedSection = await Section.findByIdAndUpdate(
       sectionId,
       updatedSectionData,
@@ -55,14 +57,12 @@ const updateSection = async (req, res) => {
     const groupByOptions = updatedSection.groupByOptions
     const sortBy = updatedSection.sortBy
     const arrMetricsFilters = updatedSection.metricsFilters
-    console.log('arrMetricsFilters UPD!!!!', arrMetricsFilters)
+    const notificationInterval = updatedSection.notificationInterval
 
     const metricsFiltersArray = arrMetricsFilters.map((filter) => {
       const { filterName, filterOperator, filterValue } = filter
       return { name: filterName, operator: filterOperator, value: filterValue }
     })
-
-    console.log('metricsFiltersArray UPD', metricsFiltersArray)
 
     await dataCf(
       metrics,
@@ -71,7 +71,8 @@ const updateSection = async (req, res) => {
       formattedEndDate,
       groupByOptions,
       sortBy,
-      metricsFiltersArray
+      metricsFiltersArray,
+      notificationInterval
     )
 
     res.status(200).json({ section: updatedSection })

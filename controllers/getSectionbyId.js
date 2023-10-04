@@ -5,7 +5,6 @@ const getSectionbyId = async (req, res) => {
 
   try {
     const section = await Section.findById(sectionId)
-
     section
       ? res.status(200).json({ section })
       : res.status(404).json({ section })

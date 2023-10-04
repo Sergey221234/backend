@@ -13,8 +13,8 @@ const createSection = async (req, res) => {
       groupByOptions,
       sortBy,
       metricsFilters,
+      notificationInterval,
     } = req.body
-
     const userId = req.session.userId
 
     const fromDate = new Date(startDate)
@@ -45,20 +45,17 @@ const createSection = async (req, res) => {
       sortBy,
       groupByOptions,
       metricsFilters,
+      notificationInterval,
     })
 
     await newSection.save()
 
     const metricFilter = newSection.metricsFilters
 
-    console.log('metricFilter!!!! create', metricFilter)
-
-    const metricsFiltersArray = arrMetricsFilters.map((filter) => {
+    const metricsFiltersArray = metricFilter.map((filter) => {
       const { filterName, filterOperator, filterValue } = filter
       return { name: filterName, operator: filterOperator, value: filterValue }
     })
-
-    console.log('metricsFiltersArray create', metricsFiltersArray)
 
     await dataCf(
       metrics,
@@ -67,7 +64,8 @@ const createSection = async (req, res) => {
       formattedEndDate,
       groupByOptions,
       sortBy,
-      metricsFiltersArray
+      metricsFiltersArray,
+      notificationInterval
     )
 
     res.status(201).json({ section: newSection })

@@ -1,62 +1,83 @@
 const axios = require('axios')
 const { Telegraf } = require('telegraf')
+require('dotenv').config()
 
-const bot = new Telegraf('6415825467:AAH0zQVL2qkukflpysYTHgq4ixW8IUv2k68') // Замените YOUR_BOT_TOKEN на свой токен бота
+const bot = new Telegraf(process.env.BOT_TOKEN)
 
-const dataCf = async (
+const sendTelegramMessage = async (telegramId, metricsDataFilters) => {
+  try {
+    await bot.telegram.sendMessage(telegramId, metricsDataFilters)
+    console.log('Сообщение успешно отправлено в телеграм.')
+  } catch (error) {
+    console.error('Ошибка при отправке сообщения в телеграм:', error)
+  }
+}
+
+let intervalId // Переменная для хранения идентификатора интервала
+
+const dataCf = (
   metrics,
   telegramId,
   formattedStartDate,
   formattedEndDate,
   groupByOptions,
   sortBy,
-  metricsFiltersArray
+  metricsFiltersArray,
+  notificationInterval
 ) => {
-  console.log('metricsFiltersArray + DATACF', metricsFiltersArray)
-  try {
-    // const filtersForRequest = metricsFiltersArray.map((filter) => ({
-    //   name: filter.name,
-    //   operator: filter.operator,
-    //   value: filter.value,
-    // }))
-    // console.log('filtersForRequest', filtersForRequest)
-    const options = {
-      method: 'POST',
-      url: 'https://public-api.clickflare.io/api/report',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-        'api-key': process.env.API_KEY,
-      },
-      data: {
-        startDate: formattedStartDate,
-        endDate: formattedEndDate,
-        groupBy: groupByOptions,
-        metrics: metrics,
-        timezone: 'CET',
-        orderType: 'asc',
-        currency: 'USD',
-        sortBy: sortBy,
-        page: 1,
-        pageSize: 1,
-        includeAll: true,
-        metricsFilters: metricsFiltersArray,
-        conversionTimestamp: 'visit',
-      },
-    }
+  const intervalCallback = async () => {
+    try {
+      const options = {
+        method: 'POST',
+        url: 'https://public-api.clickflare.io/api/report',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+          'api-key': process.env.API_KEY,
+        },
+        data: {
+          startDate: formattedStartDate,
+          endDate: formattedEndDate,
+          groupBy: groupByOptions,
+          metrics: metrics,
+          timezone: 'CET',
+          orderType: 'asc',
+          currency: 'USD',
+          sortBy: sortBy,
+          page: 1,
+          pageSize: 1,
+          includeAll: true,
+          metricsFilters: metricsFiltersArray,
+          conversionTimestamp: 'visit',
+        },
+      }
 
-    const { data } = await axios.request(options)
-    console.log(data)
+      const { data } = await axios.request(options)
+      console.log(data)
 
-    // Проверяем условие (например, visits > 0)
-    if (data.totals.visits > 0) {
-      console.log(data.totals.visits)
-      // Отправляем уведомление в Telegram
-      bot.telegram.sendMessage(telegramId, 'Условие выполнено: visits > 0')
+      if (data.items.length !== 0 && Object.keys(data.totals).length !== 0) {
+        const convertMetricsFilters = JSON.stringify(metricsFiltersArray)
+        const metricsDataFilters = `Метрики по фильтру ${convertMetricsFilters}`
+        await sendTelegramMessage(telegramId, metricsDataFilters)
+      }
+    } catch (error) {
+      console.error(
+        'Ошибка при получении данных из API или отправке сообщения:',
+        error
+      )
     }
-  } catch (error) {
-    console.error('Some error from the CF', error)
+  }
+
+  if (notificationInterval !== 9999) {
+    intervalId = setInterval(intervalCallback, notificationInterval * 60 * 1000)
   }
 }
 
-module.exports = dataCf
+const stopInterval = () => {
+  clearInterval(intervalId)
+}
+
+module.exports = {
+  dataCf,
+  stopInterval,
+}
