@@ -1,0 +1,39 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "backend-api/app.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/login",
+      "dest": "backend-api/app.js"
+    },
+    {
+      "src": "/register",
+      "dest": "backend-api/app.js"
+    },
+    {
+      "src": "/create",
+      "dest": "backend-api/app.js"
+    },
+    {
+      "src": "/sections",
+      "dest": "backend-api/app.js"
+    },
+    {
+      "src": "/sections/:sectionId",
+      "dest": "backend-api/app.js"
+    },
+    {
+      "src": "/section/:sectionId",
+      "dest": "backend-api/app.js"
+    },
+    {
+      "src": "/delete/:sectionId",
+      "dest": "backend-api/app.js"
+    }
+  ]
+}
