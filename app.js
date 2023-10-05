@@ -10,27 +10,19 @@ const router = require('./routes/index')
 const app = express()
 app.use(express.json())
 
-app.use((req, res, next) => {
-  res.header(
-    'Access-Control-Allow-Origin',
-    'https://admin-panel-chi-azure.vercel.app'
-  )
-  res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE')
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization')
-  res.header('Access-Control-Allow-Credentials', 'true')
-  if (req.method === 'OPTIONS') {
-    res.sendStatus(204)
-  } else {
-    next()
-  }
-})
+const allowedOrigins = ['https://admin-panel-chi-azure.vercel.app']
 
 app.use(
   cors({
-    origin: 'https://admin-panel-chi-azure.vercel.app',
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    credentials: true,
-    optionsSuccessStatus: 204,
+    origin: function (origin, callback) {
+      // Проверьте, разрешен ли origin
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true)
+      } else {
+        callback(new Error('Not allowed by CORS'))
+      }
+    },
+    credentials: true, // Разрешить передачу куки и заголовков аутентификации
   })
 )
 mongoose
