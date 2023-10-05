@@ -11,9 +11,18 @@ const app = express()
 app.use(express.json())
 
 app.use((req, res, next) => {
-  res.setHeader('X-Content-Type-Options', 'nosniff')
-  res.setHeader('X-XSS-Protection', '1; mode=block')
-  next()
+  res.header(
+    'Access-Control-Allow-Origin',
+    'https://admin-panel-chi-azure.vercel.app'
+  )
+  res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE')
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+  res.header('Access-Control-Allow-Credentials', 'true')
+  if (req.method === 'OPTIONS') {
+    res.sendStatus(204)
+  } else {
+    next()
+  }
 })
 
 app.use(
