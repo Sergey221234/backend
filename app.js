@@ -16,7 +16,6 @@ app.use(
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
     optionsSuccessStatus: 204,
-    origin: '*',
   })
 )
 mongoose
