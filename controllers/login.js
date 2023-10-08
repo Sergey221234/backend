@@ -13,7 +13,7 @@ const login = async (req, res) => {
 
     req.session.userId = authenticatedUser._id
 
-    console.log(req.session)
+    console.log(req.session.userId)
 
     req.session.save((err) => {
       if (err) {

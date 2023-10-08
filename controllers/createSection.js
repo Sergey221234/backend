@@ -1,5 +1,5 @@
 const Section = require('../models/section')
-const dataCf = require('./dataCf')
+const { dataCf } = require('./dataCf')
 
 // Создать новый раздел
 const createSection = async (req, res) => {
@@ -16,6 +16,8 @@ const createSection = async (req, res) => {
       notificationInterval,
     } = req.body
     const userId = req.session.userId
+
+    console.log('create secion - userId', userId)
 
     const fromDate = new Date(startDate)
     const toDate = new Date(endDate)

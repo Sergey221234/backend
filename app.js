@@ -41,8 +41,8 @@ app.use(
     saveUninitialized: false,
     store: store,
     cookie: {
-      secure: true, // Установите true, если используете HTTPS
-      expires: new Date(Date.now() + 3600000), // Настройте срок действия куки
+      secure: false, // Установите true, если используете HTTPS
+      expires: null,
       sameSite: 'Lax',
       path: '/',
     },

@@ -11,6 +11,7 @@ const SectionSchema = new mongoose.Schema({
   metricsFilters: [Filter.schema],
   telegramId: String,
   notificationInterval: Number,
+  userId: String,
 })
 
 const Section = mongoose.model('Section', SectionSchema)
