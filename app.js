@@ -17,10 +17,13 @@ app.use(
   })
 )
 mongoose
-  .connect(process.env.DB, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(
+    'mongodb+srv://szaprudskyi:g03n7bjxmu@cluster0.m91emua.mongodb.net/?retryWrites=true&w=majority',
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    }
+  )
   .then(() => {
     console.log('MongoDB подключена')
   })
@@ -29,7 +32,7 @@ mongoose
   })
 
 const store = new MongoDBStore({
-  uri: process.env.DB,
+  uri: 'mongodb+srv://szaprudskyi:g03n7bjxmu@cluster0.m91emua.mongodb.net/?retryWrites=true&w=majority',
   collection: 'sessions',
   client: mongoose.connection,
 })
