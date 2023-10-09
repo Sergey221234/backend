@@ -39,13 +39,15 @@ const store = new MongoDBStore({
 
 app.use(
   session({
-    secret: 'asddddsaa',
+    secret: 'moykluch2dssd@',
     resave: false,
     saveUninitialized: false,
     store: store,
     cookie: {
-      secure: false, // Установите true, если используете HTTPS
+      secure: true, // Установите true, если используете HTTPS
       expires: null,
+      sameSite: 'None',
+      path: '/',
     },
   })
 )
