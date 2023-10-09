@@ -46,8 +46,6 @@ app.use(
     cookie: {
       secure: true, // Установите true, если используете HTTPS
       expires: null,
-      sameSite: 'Lax',
-      path: '/',
     },
   })
 )
