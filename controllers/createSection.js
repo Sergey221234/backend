@@ -41,13 +41,13 @@ const createSection = async (req, res) => {
       title,
       metrics,
       telegramId,
-      userId,
       startDate: formattedStartDate,
       endDate: formattedEndDate,
       sortBy,
       groupByOptions,
       metricsFilters,
       notificationInterval,
+      userId,
     })
 
     await newSection.save()
