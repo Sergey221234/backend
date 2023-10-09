@@ -47,7 +47,7 @@ app.use(
       secure: true, // Установите true, если используете HTTPS
       expires: null,
       sameSite: 'None',
-      path: '/',
+      domain: 'https://admin-panel-chi-azure.vercel.app',
     },
   })
 )
