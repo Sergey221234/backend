@@ -2,7 +2,7 @@ const axios = require('axios')
 const { Telegraf } = require('telegraf')
 require('dotenv').config()
 
-const bot = new Telegraf(process.env.BOT_TOKEN)
+const bot = new Telegraf('6415825467:AAH0zQVL2qkukflpysYTHgq4ixW8IUv2k68')
 
 const sendTelegramMessage = async (telegramId, metricsDataFilters) => {
   try {
@@ -33,7 +33,8 @@ const dataCf = (
         headers: {
           'Content-Type': 'application/json',
           Accept: 'application/json',
-          'api-key': process.env.API_KEY,
+          'api-key':
+            '9a061e70d01b517d631a2c400d222ec83515d9106c59ad7f7ebe22c3f72e80ae.0a5f392f4dcaf9bd29e5f9bf9dd9b2a321da43b7',
         },
         data: {
           startDate: formattedStartDate,
