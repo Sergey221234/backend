@@ -46,7 +46,7 @@ app.use(
     cookie: {
       secure: true, // Установите true, если используете HTTPS
       expires: null,
-      sameSite: 'None',
+      sameSite: 'none',
       domain: 'https://admin-panel-chi-azure.vercel.app',
     },
   })
