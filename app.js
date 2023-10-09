@@ -44,7 +44,7 @@ app.use(
     saveUninitialized: false,
     store: store,
     cookie: {
-      secure: false, // Установите true, если используете HTTPS
+      secure: true, // Установите true, если используете HTTPS
       expires: null,
       sameSite: 'Lax',
       path: '/',
