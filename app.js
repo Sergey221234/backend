@@ -13,7 +13,7 @@ app.use(express.json())
 
 app.use(
   cors({
-    origin: 'https://app.n2stools.com',
+    origin: 'https://admin-panel-chi-azure.vercel.app',
     credentials: true,
   })
 )
