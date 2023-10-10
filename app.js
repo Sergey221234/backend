@@ -1,4 +1,5 @@
 const express = require('express')
+const path = require('path')
 const mongoose = require('mongoose')
 const cors = require('cors')
 require('dotenv').config()
@@ -16,6 +17,8 @@ app.use(
     credentials: true,
   })
 )
+
+app.use(express.static('build'))
 mongoose
   .connect(
     'mongodb+srv://szaprudskyi:g03n7bjxmu@cluster0.m91emua.mongodb.net/?retryWrites=true&w=majority',
@@ -46,11 +49,15 @@ app.use(
     cookie: {
       secure: true, // Установите true, если используете HTTPS
       expires: null,
-      sameSite: 'none',
-      domain: 'https://admin-panel-chi-azure.vercel.app',
+      sameSite: 'None',
+      path: '/',
     },
   })
 )
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'))
+})
 
 app.use(router)
 
