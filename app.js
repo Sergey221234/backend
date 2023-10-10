@@ -16,8 +16,8 @@ app.use(
     credentials: true,
   })
 )
-
-app.use(express.static('build'))
+const root = path.join(__dirname, 'build')
+app.use(express.static(root))
 mongoose
   .connect(
     'mongodb+srv://szaprudskyi:g03n7bjxmu@cluster0.m91emua.mongodb.net/?retryWrites=true&w=majority',
@@ -55,7 +55,7 @@ app.use(
 )
 
 app.use(router)
-app.get('*', (req, res) => {
+app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, 'build', 'index.html'))
 })
 const PORT = process.env.PORT || 4001
