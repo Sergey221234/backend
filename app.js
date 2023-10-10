@@ -55,12 +55,10 @@ app.use(
   })
 )
 
+app.use(router)
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'build', 'index.html'))
 })
-
-app.use(router)
-
 const PORT = process.env.PORT || 4001
 app.listen(PORT, () => {
   console.log(`Сервер запущен на порту ${PORT}`)
