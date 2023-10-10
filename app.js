@@ -13,6 +13,7 @@ app.use(express.json())
 
 app.use(
   cors({
+    origin: 'https://app.n2stools.com',
     credentials: true,
   })
 )
