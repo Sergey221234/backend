@@ -13,7 +13,7 @@ app.use(express.json())
 
 app.use(
   cors({
-    origin: 'http://app.n2stools.com',
+    origin: 'http://dash.n2stools.com',
     credentials: true,
   })
 )
