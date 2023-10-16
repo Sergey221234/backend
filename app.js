@@ -17,8 +17,8 @@ app.use(
     credentials: true,
   })
 )
-const root = path.join(__dirname, 'build')
-app.use(express.static(root))
+// const root = path.join(__dirname, 'build')
+// app.use(express.static(root))
 mongoose
   .connect(
     'mongodb+srv://szaprudskyi:g03n7bjxmu@cluster0.m91emua.mongodb.net/?retryWrites=true&w=majority',
@@ -56,9 +56,9 @@ app.use(
 )
 
 app.use(router)
-app.get('/*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'))
-})
+// app.get('/*', (req, res) => {
+//   res.sendFile(path.join(__dirname, 'build', 'index.html'))
+// })
 const PORT = process.env.PORT || 4001
 app.listen(PORT, () => {
   console.log(`Сервер запущен на порту ${PORT}`)
