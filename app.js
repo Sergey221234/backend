@@ -13,7 +13,7 @@ app.use(express.json())
 
 app.use(
   cors({
-    origin: 'https://admin-panel-chi-azure.vercel.app',
+    origin: 'http://localhost:3000',
     credentials: true,
   })
 )

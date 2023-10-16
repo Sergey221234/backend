@@ -23,7 +23,8 @@ const dataCf = (
   groupByOptions,
   sortBy,
   metricsFiltersArray,
-  notificationInterval
+  notificationInterval,
+  timezone
 ) => {
   const intervalCallback = async () => {
     try {
@@ -41,7 +42,7 @@ const dataCf = (
           endDate: formattedEndDate,
           groupBy: groupByOptions,
           metrics: metrics,
-          timezone: 'CET',
+          timezone: timezone,
           orderType: 'asc',
           currency: 'EUR',
           sortBy: sortBy,

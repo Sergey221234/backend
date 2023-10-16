@@ -12,6 +12,7 @@ const SectionSchema = new mongoose.Schema({
   telegramId: String,
   notificationInterval: Number,
   userId: String,
+  timezone: String,
 })
 
 const Section = mongoose.model('Section', SectionSchema)

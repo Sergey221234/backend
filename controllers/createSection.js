@@ -14,6 +14,7 @@ const createSection = async (req, res) => {
       sortBy,
       metricsFilters,
       notificationInterval,
+      timezone,
     } = req.body
     const userId = req.session.userId
 
@@ -48,6 +49,7 @@ const createSection = async (req, res) => {
       metricsFilters,
       notificationInterval,
       userId,
+      timezone,
     })
 
     await newSection.save()
@@ -67,7 +69,8 @@ const createSection = async (req, res) => {
       groupByOptions,
       sortBy,
       metricsFiltersArray,
-      notificationInterval
+      notificationInterval,
+      timezone
     )
 
     res.status(201).json({ section: newSection })

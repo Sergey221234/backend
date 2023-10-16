@@ -58,6 +58,7 @@ const updateSection = async (req, res) => {
     const sortBy = updatedSection.sortBy
     const arrMetricsFilters = updatedSection.metricsFilters
     const notificationInterval = updatedSection.notificationInterval
+    const timezone = updatedSection.timezone
 
     const metricsFiltersArray = arrMetricsFilters.map((filter) => {
       const { filterName, filterOperator, filterValue } = filter
@@ -72,7 +73,8 @@ const updateSection = async (req, res) => {
       groupByOptions,
       sortBy,
       metricsFiltersArray,
-      notificationInterval
+      notificationInterval,
+      timezone
     )
 
     res.status(200).json({ section: updatedSection })
