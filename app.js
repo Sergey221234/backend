@@ -13,7 +13,7 @@ app.use(express.json())
 
 app.use(
   cors({
-    origin: 'https://app.n2stools.com',
+    origin: 'http://app.n2stools.com',
     credentials: true,
   })
 )
@@ -42,16 +42,10 @@ const store = new MongoDBStore({
 
 app.use(
   session({
-    secret: 'moykluch2dssd@',
+    secret: 'asferwgerger!$',
     resave: false,
     saveUninitialized: false,
     store: store,
-    cookie: {
-      secure: true, // Установите true, если используете HTTPS
-      expires: null,
-      sameSite: 'None',
-      path: '/',
-    },
   })
 )
 
