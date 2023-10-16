@@ -13,7 +13,7 @@ app.use(express.json())
 
 app.use(
   cors({
-    origin: 'https://app.n2stools.com',
+    origin: 'https://n2stools.com',
     credentials: true,
   })
 )
@@ -49,7 +49,7 @@ app.use(
     cookie: {
       secure: true, // Установите true, если используете HTTPS
       expires: null,
-      sameSite: 'None',
+      sameSite: 'Lax',
       path: '/',
     },
   })
