@@ -22,6 +22,12 @@ const updateSection = async (req, res) => {
 
     const formattedStartDate1 = formatDate(fromDate)
     const formattedEndDate2 = formatDate(toDate)
+    console.log(formattedStartDate1)
+
+    formattedStartDate1.toLocaleString()
+    formattedEndDate2.toLocaleString()
+
+    console.log(formattedStartDate1)
 
     updatedSectionData.startDate = formattedStartDate1
     updatedSectionData.endDate = formattedEndDate2

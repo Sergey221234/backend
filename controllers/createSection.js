@@ -36,10 +36,12 @@ const createSection = async (req, res) => {
 
     const formattedStartDate = formatDate(fromDate)
     const formattedEndDate = formatDate(toDate)
-
+    console.log('formattedStartDate', formattedStartDate)
     formattedStartDate.toLocaleString()
     formattedEndDate.toLocaleString()
 
+    console.log(formattedEndDate)
+    console.log(formattedEndDate)
     console.log('metricsFilters create', metricsFilters)
     const newSection = new Section({
       title,
