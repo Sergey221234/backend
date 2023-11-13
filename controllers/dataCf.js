@@ -47,37 +47,116 @@ const dataCf = (
           currency: 'EUR',
           sortBy: sortBy,
           page: 1,
-          pageSize: 1,
+          pageSize: 30,
           includeAll: false,
           metricsFilters: metricsFiltersArray,
-          conversionTimestamp: 'visit',
+          conversionTimestamp: 'postback',
         },
       }
 
       const { data } = await axios.request(options)
-      console.log(data)
+      // console.log('data response', data)
 
-      function formatObjectToString(metricsFiltersArray) {
-        let result = ''
-        metricsFiltersArray.forEach((obj, index) => {
-          const keys = Object.keys(obj)
-          console.log('keys', keys)
-          const values = Object.values(obj)
-          console.log('values', values)
-          const conditionString = `${values[0]} ${values[1]} ${values[2]}`
-          console.log('conditionString', conditionString)
-          console.log('index', `${index}`)
-          result += `${index + 1}. ${conditionString}\n`
-          console.log('result', result)
+      const dateformattedStartDate = formattedStartDate.split(' ')[0]
+
+      const dateformattedEndDate = formattedEndDate.split(' ')[0]
+
+      // const filteData = data.items
+      //   .filter((item) => item.date === dateformattedStartDate)
+      //   .map((item) => ({
+      //     date: item.date,
+      //     param1: item.param1,
+      //     dynamicPayout: item.dynamicPayout,
+      //     conversations: item.conversions,
+      //   }))
+      // const filteData2 = data.items
+      //   .filter((item) => item.date === dateformattedEndDate)
+      //   .map((item) => ({
+      //     date: item.date,
+      //     param1: item.param1,
+      //     dynamicPayout: item.dynamicPayout,
+      //     conversations: item.conversions,
+      //   }))
+
+      // console.log('filteData1', filteData)
+      // console.log('filteData2', filteData2)
+
+      const conversionsData = data.items.map(
+        (conversionItem) => conversionItem.conversions
+      )
+      // console.log('conversionsData', conversionsData)
+      if (conversionsData) {
+        const getDataForDate = (data, date) => {
+          return data.items
+            .filter((item) => item.date === date)
+            .map((item) => ({
+              param1: item.param1,
+              dynamicPayout: item.dynamicPayout,
+              campaignName: item.campaignName,
+              offerName: item.offerName,
+            }))
+        }
+
+        const dataForStartDate = getDataForDate(data, dateformattedStartDate)
+        const dataForEndDate = getDataForDate(data, dateformattedEndDate)
+
+        dataForStartDate.forEach((startItem) => {
+          const matchingEndItem = dataForEndDate.find(
+            (endItem) => endItem.param1 === startItem.param1
+          )
+
+          if (matchingEndItem) {
+            const payoutStart = startItem.dynamicPayout
+            const roundPayoutStart = payoutStart.toFixed(2)
+
+            const payoutEnd = matchingEndItem.dynamicPayout
+            const roundPayoutEnd = payoutEnd.toFixed(2)
+
+            // const messages = ''
+
+            if (matchingEndItem.dynamicPayout > startItem.dynamicPayout) {
+              bot.telegram.sendMessage(
+                telegramId,
+                `Выплата по ключу <b>${matchingEndItem.param1}</b> в офере <b>${matchingEndItem.offerName}</b> поднялась с <b>${roundPayoutStart}</b> до <b>${roundPayoutEnd}</b> в кампании <b>${matchingEndItem.campaignName}</b>`,
+                { parse_mode: 'HTML' }
+              )
+              stopInterval()
+            }
+            if (matchingEndItem.dynamicPayout < startItem.dynamicPayout) {
+              bot.telegram.sendMessage(
+                telegramId,
+                `Выплата по ключу <b>${matchingEndItem.param1}</b> в офере <b>${matchingEndItem.offerName}</b> упала с <b>${roundPayoutStart}</b> до <b>${roundPayoutEnd}</b> в кампании <b>${matchingEndItem.campaignName}</b>`,
+                { parse_mode: 'HTML' }
+              )
+              stopInterval()
+            }
+          }
         })
-        return result
       }
+      if (!conversionsData) {
+        function formatObjectToString(metricsFiltersArray) {
+          let result = ''
+          metricsFiltersArray.forEach((obj, index) => {
+            const keys = Object.keys(obj)
+            // console.log('keys', keys)
+            const values = Object.values(obj)
+            // console.log('values', values)
+            const conditionString = `${values[0]} ${values[1]} ${values[2]}`
+            // console.log('conditionString', conditionString)
+            // console.log('index', `${index}`)
+            result += `${index + 1}. ${conditionString}\n`
+            // console.log('result', result)
+          })
+          return result
+        }
 
-      if (data.items.length !== 0 && Object.keys(data.totals).length !== 0) {
-        const convertMetricsFilters = formatObjectToString(metricsFiltersArray)
-        const metricsDataFilters = `Правило сработало по следующим условиям: \n${convertMetricsFilters}`
-        await sendTelegramMessage(telegramId, metricsDataFilters)
-        stopInterval()
+        if (data.items.length !== 0 && Object.keys(data.totals).length !== 0) {
+          const convertMetricsFilters =
+            formatObjectToString(metricsFiltersArray)
+          const metricsDataFilters = `Правило сработало по следующим условиям: \n${convertMetricsFilters}`
+          await sendTelegramMessage(telegramId, metricsDataFilters)
+          stopInterval()
+        }
       }
     } catch (error) {
       console.error(
