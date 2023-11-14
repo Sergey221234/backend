@@ -13,7 +13,7 @@ app.use(express.json())
 
 app.use(
   cors({
-    origin: 'http://localhost:3000',
+    origin: 'https://dash.n2stools.com',
     credentials: true,
   })
 )
