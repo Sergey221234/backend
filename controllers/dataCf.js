@@ -100,6 +100,8 @@ const dataCf = (
         const dataForStartDate = getDataForDate(data, dateformattedStartDate)
         const dataForEndDate = getDataForDate(data, dateformattedEndDate)
 
+        const messages = []
+
         dataForStartDate.forEach((startItem) => {
           const matchingEndItem = dataForEndDate.find(
             (endItem) => endItem.param1 === startItem.param1
@@ -112,26 +114,40 @@ const dataCf = (
             const payoutEnd = matchingEndItem.dynamicPayout
             const roundPayoutEnd = payoutEnd.toFixed(2)
 
-            // const messages = ''
+            let message = ''
 
             if (matchingEndItem.dynamicPayout > startItem.dynamicPayout) {
-              bot.telegram.sendMessage(
-                telegramId,
-                `Выплата по ключу <b>${matchingEndItem.param1}</b> в офере <b>${matchingEndItem.offerName}</b> поднялась с <b>${roundPayoutStart}</b> до <b>${roundPayoutEnd}</b> в кампании <b>${matchingEndItem.campaignName}</b>`,
-                { parse_mode: 'HTML' }
-              )
-              stopInterval()
+              message += `Выплата по ключу <b>${matchingEndItem.param1}</b> в офере <b>${matchingEndItem.offerName}</b> поднялась с <b>${roundPayoutStart}</b> до <b>${roundPayoutEnd}</b> в кампании <b>${matchingEndItem.campaignName}</b>`
+              // { parse_mode: 'HTML' }
+              // bot.telegram.sendMessage(
+              //   telegramId,
+
+              // )
+              // stopInterval()
             }
             if (matchingEndItem.dynamicPayout < startItem.dynamicPayout) {
-              bot.telegram.sendMessage(
-                telegramId,
-                `Выплата по ключу <b>${matchingEndItem.param1}</b> в офере <b>${matchingEndItem.offerName}</b> упала с <b>${roundPayoutStart}</b> до <b>${roundPayoutEnd}</b> в кампании <b>${matchingEndItem.campaignName}</b>`,
-                { parse_mode: 'HTML' }
-              )
-              stopInterval()
+              message += `Выплата по ключу <b>${matchingEndItem.param1}</b> в офере <b>${matchingEndItem.offerName}</b> упала с <b>${roundPayoutStart}</b> до <b>${roundPayoutEnd}</b> в кампании <b>${matchingEndItem.campaignName}</b>`
+              // bot.telegram.sendMessage(
+              //   telegramId,
+              //   ,
+              //   { parse_mode: 'HTML' }
+              // )
+              // stopInterval()
             }
+            messages.push(message)
+            // console.log('messages', messages)
           }
         })
+
+        if (messages.length > 0) {
+          const numbersMessages = messages
+            .map((messageItem, i) => `${i + 1}. ${messageItem}`)
+            .join('\n')
+          bot.telegram.sendMessage(telegramId, numbersMessages, {
+            parse_mode: 'HTML',
+          })
+          stopInterval()
+        }
       }
       if (!conversionsData) {
         function formatObjectToString(metricsFiltersArray) {
